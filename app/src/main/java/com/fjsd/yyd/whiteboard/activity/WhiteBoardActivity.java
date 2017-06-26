@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -121,7 +122,7 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
         mBtSizeLarge.setOnClickListener(this);
         mBtSizeMiddle.setOnClickListener(this);
         mBtSizeMini.setOnClickListener(this);
-        //画笔或者文字颜色
+        //画笔颜色
         mFabMenuColor.setOnFloatingActionsMenuClickListener(new FloatingActionsMenu.OnFloatingActionsMenuClickListener() {
             @Override
             public void addButtonLister() {
@@ -224,7 +225,7 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
     }
 
     /**
-     * 切换画笔尺寸按按钮背景
+     * 切换画笔尺寸
      */
     private void changePenBack() {
         //圆代表笔的粗细，外圈代表选中状态
@@ -258,6 +259,8 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
             mFabMenuColor.setAddButtonBackground(R.drawable.white_board_color_purple_selector);
         } else if (OperationUtils.getInstance().mCurrentColor == WhiteBoardVariable.Color.GREEN) {
             mFabMenuColor.setAddButtonBackground(R.drawable.white_board_color_green_selector);
+        }else{
+            mFabMenuColor.setAddButtonBackground(R.drawable.pickcolor);
         }
     }
 
@@ -364,6 +367,7 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
             case WhiteBoardVariable.Operation.ERASER_CLICK:
             case WhiteBoardVariable.Operation.BACKCOLOR_CLICK:
             case WhiteBoardVariable.Operation.OUTSIDE_CLICK:
+                //Log.v("yang",currentOperation+"  + " +OperationUtils.getInstance().mCurrentOPerationBackColor);
                 switch (OperationUtils.getInstance().mCurrentOPerationColor) {
                     case WhiteBoardVariable.Operation.COLOR_NORMAL:
                         break;
@@ -461,11 +465,12 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
             case WhiteBoardVariable.Operation.TEXT_CLICK:
             case WhiteBoardVariable.Operation.ERASER_CLICK:
             case WhiteBoardVariable.Operation.OUTSIDE_CLICK:
+                Log.v("yang",currentOperation+"  + " +OperationUtils.getInstance().mCurrentOPerationBackColor);
                 switch (OperationUtils.getInstance().mCurrentOPerationBackColor) {
                     case WhiteBoardVariable.Operation.BACKCOLOR_NORMAL:
                         break;
                     case WhiteBoardVariable.Operation.BACKCOLOR_EXPAND:
-                        mFabMenuColor.collapse();
+                        mFabMenuBack.collapse();
                         OperationUtils.getInstance().mCurrentOPerationBackColor = WhiteBoardVariable.Operation.BACKCOLOR_NORMAL;
                         break;
                 }
@@ -565,7 +570,8 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
                 if (OperationUtils.getInstance().mCurrentOPerationPen == WhiteBoardVariable.Operation.PEN_EXPAND
                         || OperationUtils.getInstance().mCurrentOPerationColor == WhiteBoardVariable.Operation.COLOR_EXPAND
                         || OperationUtils.getInstance().mCurrentOPerationText == WhiteBoardVariable.Operation.TEXT_EXPAND
-                        || OperationUtils.getInstance().mCurrentOPerationEraser == WhiteBoardVariable.Operation.ERASER_EXPAND) {
+                        || OperationUtils.getInstance().mCurrentOPerationEraser == WhiteBoardVariable.Operation.ERASER_EXPAND
+                        || OperationUtils.getInstance().mCurrentOPerationBackColor == WhiteBoardVariable.Operation.BACKCOLOR_EXPAND) {
                     mVBottomBack.setVisibility(View.VISIBLE);
                 } else {
                     mVBottomBack.setVisibility(View.GONE);
@@ -629,7 +635,7 @@ public class WhiteBoardActivity extends AppCompatActivity implements View.OnClic
             case R.id.bt_color_black://设置颜色-黑色
                 setColor(WhiteBoardVariable.Color.BLACK);
                 break;
-            case R.id.bt_color_pick://设置颜色
+            case R.id.bt_color_pick://设置颜色-自定义
                 ColorPickerDialog dialog = new ColorPickerDialog(WhiteBoardActivity.this,WhiteBoardVariable.Color.BLACK);
                 dialog.show();
                 dialog.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {

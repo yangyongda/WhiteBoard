@@ -124,6 +124,7 @@ public class FloatingActionsMenu extends ViewGroup {
     public void setAddButtonBackground(int drawable){
             mAddButton.setBackgroundResource(drawable);
     }
+
     /**
      * dip转px
      */
